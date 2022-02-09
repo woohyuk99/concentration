@@ -56,6 +56,7 @@
       let shuffled = [];
       let clicked = [];
       let completed = [];
+      let clickable = false;
 
       function shuffle() {
         // 피셔 예이츠 셔플
@@ -83,6 +84,9 @@
       }
 
       function onClickCard() {
+        if (!clickable || completed.includes(this) || clicked[0] === this) {
+          return;
+        }
         this.classList.toggle("flipped");
         clicked.push(this);
         if (clicked.length != 2) {
@@ -114,6 +118,7 @@
         }, 500);
       }
 
+
       function startGame() {
         // 게임 시작
         shuffle(); // 카드 섞기
@@ -124,7 +129,7 @@
         }
         document.querySelectorAll(".card").forEach((card, index) => {
           // 초반 카드 공개
-          setTimeout(() => {
+          setTimeout(() => { 
             card.classList.add("flipped"); // add flipped class => 앞면 보임
           }, 1000 + 100 * index); // 1초, 1.1초, 1.2초.....
         });
@@ -134,6 +139,7 @@
           document.querySelectorAll(".card").forEach((card) => {
             card.classList.remove("flipped"); // remove flipped class => 뒷면 보임
           });
+          clickable = true;
         }, 5000); // 5초 후에 카드 뒤집기
       }
 
@@ -142,8 +148,11 @@
         colorCopy = colors.concat(colors);
         shuffle = [];
         completed = [];
+        clickable = false;
         startGame();
       }
+
+      startGame();
     </script>
   </body>
 </html>
