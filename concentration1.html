@@ -83,6 +83,10 @@
         return card;
       }
 
+      // clicked : [2,5,8,9]
+      // task queue: 
+      // background : addEventListener(12)
+
       function onClickCard() {
         if (!clickable || completed.includes(this) || clicked[0] === this) {
           return;
@@ -92,12 +96,9 @@
         if (clicked.length != 2) {
           return;
         }
-        const firstBackColor =
-          clicked[0].querySelector(".card-back").style.backgroundColor;
-        const secondBackColor =
-          clicked[1].querySelector(".card-back").style.backgroundColor;
-        if (firstBackColor === secondBackColor) {
-          // 두 카드가 같은 카드라면
+        const firstBackColor = clicked[0].querySelector(".card-back").style.backgroundColor;
+        const secondBackColor = clicked[1].querySelector(".card-back").style.backgroundColor;
+        if (firstBackColor === secondBackColor) { // 두 카드가 같은 카드라면
           completed.push(clicked[0]);
           completed.push(clicked[1]);
           clicked = [];
@@ -111,44 +112,44 @@
           }, 1000);
           return;
         }
+        clickable = false;
         setTimeout(() => {
           clicked[0].classList.remove("flipped");
           clicked[1].classList.remove("flipped");
           clicked = [];
+          clickable = true;
         }, 500);
       }
 
 
-      function startGame() {
-        // 게임 시작
+      function startGame() { // 게임 시작
+        clickable = false;
         shuffle(); // 카드 섞기
         for (let i = 0; i < total; i += 1) {
           const card = createCard(i);
           card.addEventListener("click", onClickCard);
           $wrapper.appendChild(card); // wrapper에 카드 12장 추가
         }
-        document.querySelectorAll(".card").forEach((card, index) => {
-          // 초반 카드 공개
+        document.querySelectorAll(".card").forEach((card, index) => { // 초반 카드 공개
           setTimeout(() => { 
             card.classList.add("flipped"); // add flipped class => 앞면 보임
           }, 1000 + 100 * index); // 1초, 1.1초, 1.2초.....
         });
 
-        setTimeout(() => {
-          // 카드 감추기
+        setTimeout(() => { // 카드 감추기
           document.querySelectorAll(".card").forEach((card) => {
             card.classList.remove("flipped"); // remove flipped class => 뒷면 보임
           });
           clickable = true;
         }, 5000); // 5초 후에 카드 뒤집기
       }
+      startGame();
 
       function resetGame() {
         $wrapper.innerHTML = "";
         colorCopy = colors.concat(colors);
         shuffle = [];
         completed = [];
-        clickable = false;
         startGame();
       }
 
